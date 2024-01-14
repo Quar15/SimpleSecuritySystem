@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${system.prettyName}">Event details</title>
+</head>
+<body>
+    <h2 th:text="${system.id}"></h2>
+    <h2 th:text="${system.prettyName}"></h2>
+    <h2 th:text="${system.macAddress}"></h2>
+    <h2 th:text="${system.status}"></h2>
+    <h2 th:text="${system.createdAt}"></h2>
+    <h2 th:text="${system.updatedAt}"></h2>
+    <h2 th:text="${system.favourite}"></h2>
+</body>
+</html>

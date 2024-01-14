@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${event.type}">Event details</title>
+</head>
+<body>
+    <h2 th:text="${event.id}">Event ID</h2>
+    <h2 th:text="${event.type}">Event Type</h2>
+    <h2 th:text="${event.created_at}">Event Timestamp</h2>
+</body>
+</html>
