@@ -3,11 +3,15 @@ package xyz.kacperjanas.securityapi.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
+import xyz.kacperjanas.securityapi.common.ESystemStatus;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -15,22 +19,23 @@ import java.util.Date;
 public class SecuritySystem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @UuidGenerator
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
+    private UUID id;
+
     private String prettyName;
     private String macAddress;
-    private SystemStatus status;
+    private ESystemStatus status;
     @CreationTimestamp
     private Date createdAt;
     @UpdateTimestamp
     private Date updatedAt;
     private Boolean favourite;
 
-    // @ManyToMany(mappedBy = "artists", cascade = CascadeType.REMOVE)
-    // private Set<Song> songs = new HashSet<>();
+    @ManyToMany(mappedBy = "systems", cascade = CascadeType.REMOVE)
+    private Set<AccessCard> accessCards = new HashSet<>();
 
-
-    public SecuritySystem(String prettyName, String macAddress, SystemStatus status, Boolean favourite) {
+    public SecuritySystem(String prettyName, String macAddress, ESystemStatus status, Boolean favourite) {
         this.prettyName = prettyName;
         this.macAddress = macAddress;
         this.status = status;
@@ -38,4 +43,16 @@ public class SecuritySystem {
     }
 
     public SecuritySystem() {}
+
+    public Boolean hasCardWithValue(String searchedCardValue) {
+        Set<AccessCard> accessCards = this.getAccessCards();
+
+        for(AccessCard card : accessCards) {
+            if (searchedCardValue.equals(card.getCardValue())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
