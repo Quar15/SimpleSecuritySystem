@@ -8,10 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 import xyz.kacperjanas.securityapi.common.ESystemStatus;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -34,6 +31,9 @@ public class SecuritySystem {
 
     @ManyToMany(mappedBy = "systems", cascade = CascadeType.REMOVE)
     private Set<AccessCard> accessCards = new HashSet<>();
+
+    @OneToMany(mappedBy = "system")
+    private Set<SecurityEvent> events = new HashSet<>();
 
     public SecuritySystem(String prettyName, String macAddress, ESystemStatus status, Boolean favourite) {
         this.prettyName = prettyName;

@@ -23,6 +23,8 @@ public class SecuritySystemToSecuritySystemCommand implements Converter<Security
         securitySystemCommand.setUpdatedAt(source.getUpdatedAt());
         securitySystemCommand.setFavourite(source.getFavourite());
 
+        securitySystemCommand.setEvents(source.getEvents());
+
         return securitySystemCommand;
     }
 }

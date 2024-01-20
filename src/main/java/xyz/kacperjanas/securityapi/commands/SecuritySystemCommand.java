@@ -4,8 +4,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import xyz.kacperjanas.securityapi.common.ESystemStatus;
+import xyz.kacperjanas.securityapi.model.SecurityEvent;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -19,4 +22,6 @@ public class SecuritySystemCommand {
     private Date createdAt;
     private Date updatedAt;
     private Boolean favourite;
+
+    private Set<SecurityEvent> events = new HashSet<>();
 }

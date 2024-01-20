@@ -12,5 +12,11 @@
     <h2 th:text="${system.createdAt}"></h2>
     <h2 th:text="${system.updatedAt}"></h2>
     <h2 th:text="${system.favourite}"></h2>
+    <table>
+        <tr th:each="event : ${system.events}">
+            <td th:text="${event.id}"></td>
+            <td th:text="${event.createdAt}"></td>
+        </tr>
+    </table>
 </body>
 </html>
