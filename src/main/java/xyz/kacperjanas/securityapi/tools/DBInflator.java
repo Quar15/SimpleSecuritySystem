@@ -31,17 +31,32 @@ public class DBInflator implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     private void initData() {
-        SecuritySystem s1 = new SecuritySystem("Test System 1", "ABC", ESystemStatus.UNLOCKED, false);
+        SecuritySystem s1 = new SecuritySystem(
+                "Test System 1",
+                "ABC",
+                ESystemStatus.UNLOCKED,
+                false
+        );
+
         AccessCard c1 = new AccessCard("TESTCARD1");
         SecurityEvent e1 = new SecurityEvent(new Date(1705751213000L));
+
         s1.getAccessCards().add(c1);
         e1.setSystem(s1);
         c1.getSystems().add(s1);
 
-        SecuritySystem s2 = new SecuritySystem("Test System 2", "ABC", ESystemStatus.LOCKED, true);
+
+        SecuritySystem s2 = new SecuritySystem(
+                "Test System 2",
+                "ABC",
+                ESystemStatus.LOCKED,
+                true
+        );
+
         AccessCard c2 = new AccessCard("TESTCARD2");
         SecurityEvent e2 = new SecurityEvent(new Date(1705752213000L));
         SecurityEvent e3 = new SecurityEvent(new Date(1705752813000L));
+
         s2.getAccessCards().add(c2);
         e2.setSystem(s2);
         e3.setSystem(s2);
