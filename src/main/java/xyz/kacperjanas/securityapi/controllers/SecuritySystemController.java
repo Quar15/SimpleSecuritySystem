@@ -20,8 +20,15 @@ public class SecuritySystemController {
 
     @GetMapping(value = {"/system/{id}/show"})
     public String getSystemDetails(Model model, @PathVariable("id") Long id) {
+        Optional<SecuritySystem> securitySystemOptional = securitySystemRepository.findById(id);
+
+        if (securitySystemOptional.isEmpty()) {
+            return "error/404";
+        }
+
         model.addAttribute("system", securitySystemToSecuritySystemCommand.convert(
                 securitySystemRepository.findById(id).get()
+                securitySystemOptional.get()
         ));
         return "system/show";
     }
