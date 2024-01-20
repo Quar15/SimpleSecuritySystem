@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>System List</title>
+</head>
+<body>
+    <table>
+        <tr th:each="system : ${systems}">
+            <td><a th:href="@{/system/{id}/show(id=${system.id})}" th:text="${system.prettyName}" href="#"></a></td>
+            <td th:text="${system.status}"></td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import xyz.kacperjanas.securityapi.commands.AuthorizationRequestCommand;
+import xyz.kacperjanas.securityapi.common.ESystemStatus;
 import xyz.kacperjanas.securityapi.converters.SecuritySystemToSecuritySystemCommand;
 import xyz.kacperjanas.securityapi.model.SecuritySystem;
 import xyz.kacperjanas.securityapi.repositories.SecuritySystemRepository;
@@ -58,6 +59,12 @@ public class SecuritySystemController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
+        switch (securitySystem.getStatus()) {
+            case LOCKED -> securitySystem.setStatus(ESystemStatus.UNLOCKED);
+            case UNLOCKED -> securitySystem.setStatus(ESystemStatus.LOCKED);
+        }
+        securitySystemRepository.save(securitySystem);
+
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
@@ -75,5 +82,11 @@ public class SecuritySystemController {
                 securitySystemOptional.get()
         ));
         return "system/show";
+    }
+
+    @GetMapping(value = {"/system/list"})
+    public String getSystemList(Model model) {
+        model.addAttribute("systems", securitySystemRepository.findAll());
+        return "system/list";
     }
 }
