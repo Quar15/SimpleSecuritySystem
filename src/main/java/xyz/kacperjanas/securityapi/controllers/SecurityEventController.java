@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import xyz.kacperjanas.securityapi.commands.EventRequestCommand;
+import xyz.kacperjanas.securityapi.common.EEventType;
 import xyz.kacperjanas.securityapi.model.SecurityEvent;
 import xyz.kacperjanas.securityapi.model.SecuritySystem;
 import xyz.kacperjanas.securityapi.repositories.SecurityEventRepository;
@@ -54,8 +55,11 @@ public class SecurityEventController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        // Timestamp normally is in seconds, but in Java it is in milliseconds
-        SecurityEvent securityEvent = new SecurityEvent(new Date(command.getTimestamp() * 1000));
+
+        SecurityEvent securityEvent = new SecurityEvent(
+                EEventType.MOVE_DETECTION,
+                new Date(command.getTimestamp() * 1000) // Timestamp in Java for Date is in milliseconds
+        );
         securityEvent.setSystem(securitySystemOptional.get());
         securityEventRepository.save(securityEvent);
 

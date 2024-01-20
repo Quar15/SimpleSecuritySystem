@@ -33,6 +33,7 @@ public class SecuritySystem {
     private Set<AccessCard> accessCards = new HashSet<>();
 
     @OneToMany(mappedBy = "system")
+    @OrderBy("createdAt DESC")
     private Set<SecurityEvent> events = new HashSet<>();
 
     public SecuritySystem(String prettyName, String macAddress, ESystemStatus status, Boolean favourite) {

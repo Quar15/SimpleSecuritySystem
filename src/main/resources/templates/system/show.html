@@ -16,6 +16,7 @@
         <tr th:each="event : ${system.events}">
             <td th:text="${event.id}"></td>
             <td th:text="${event.createdAt}"></td>
+            <td th:text="${event.eventType}"></td>
         </tr>
     </table>
 </body>

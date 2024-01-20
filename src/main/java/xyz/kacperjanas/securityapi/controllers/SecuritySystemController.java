@@ -1,5 +1,6 @@
 package xyz.kacperjanas.securityapi.controllers;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -7,26 +8,32 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import xyz.kacperjanas.securityapi.commands.AuthorizationRequestCommand;
+import xyz.kacperjanas.securityapi.common.EEventType;
 import xyz.kacperjanas.securityapi.common.ESystemStatus;
 import xyz.kacperjanas.securityapi.converters.SecuritySystemToSecuritySystemCommand;
+import xyz.kacperjanas.securityapi.model.SecurityEvent;
 import xyz.kacperjanas.securityapi.model.SecuritySystem;
+import xyz.kacperjanas.securityapi.repositories.SecurityEventRepository;
 import xyz.kacperjanas.securityapi.repositories.SecuritySystemRepository;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
 @Controller
 public class SecuritySystemController {
 
+    private SecurityEventRepository securityEventRepository;
     private SecuritySystemRepository securitySystemRepository;
     private SecuritySystemToSecuritySystemCommand securitySystemToSecuritySystemCommand;
 
-    public SecuritySystemController(SecuritySystemRepository securitySystemRepository, SecuritySystemToSecuritySystemCommand securitySystemToSecuritySystemCommand) {
+    public SecuritySystemController(SecurityEventRepository securityEventRepository, SecuritySystemRepository securitySystemRepository, SecuritySystemToSecuritySystemCommand securitySystemToSecuritySystemCommand) {
+        this.securityEventRepository = securityEventRepository;
         this.securitySystemRepository = securitySystemRepository;
         this.securitySystemToSecuritySystemCommand = securitySystemToSecuritySystemCommand;
     }
 
-    //region API
+//region API
 
     @PostMapping(
             value = {"/api/system/authorize"},
@@ -59,11 +66,22 @@ public class SecuritySystemController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        switch (securitySystem.getStatus()) {
-            case LOCKED -> securitySystem.setStatus(ESystemStatus.UNLOCKED);
-            case UNLOCKED -> securitySystem.setStatus(ESystemStatus.LOCKED);
-        }
+        EEventType eventType = switch (securitySystem.getStatus()) {
+            case LOCKED -> {
+                securitySystem.setStatus(ESystemStatus.UNLOCKED);
+                yield EEventType.UNLOCK;
+            }
+            case UNLOCKED -> {
+                securitySystem.setStatus(ESystemStatus.LOCKED);
+                yield EEventType.LOCK;
+            }
+            default -> EEventType.EVENT;
+        };
         securitySystemRepository.save(securitySystem);
+
+        SecurityEvent securityEvent = new SecurityEvent(eventType, new Date());
+        securityEvent.setSystem(securitySystem);
+        securityEventRepository.save(securityEvent);
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
@@ -86,7 +104,10 @@ public class SecuritySystemController {
 
     @GetMapping(value = {"/system/list"})
     public String getSystemList(Model model) {
-        model.addAttribute("systems", securitySystemRepository.findAll());
+        model.addAttribute(
+                "systems",
+                securitySystemRepository.findAllBy(Sort.by(Sort.Direction.DESC, "updatedAt"))
+        );
         return "system/list";
     }
 }

@@ -3,6 +3,7 @@ package xyz.kacperjanas.securityapi.tools;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import xyz.kacperjanas.securityapi.common.EEventType;
 import xyz.kacperjanas.securityapi.model.AccessCard;
 import xyz.kacperjanas.securityapi.model.SecurityEvent;
 import xyz.kacperjanas.securityapi.model.SecuritySystem;
@@ -39,7 +40,7 @@ public class DBInflator implements ApplicationListener<ContextRefreshedEvent> {
         );
 
         AccessCard c1 = new AccessCard("TESTCARD1");
-        SecurityEvent e1 = new SecurityEvent(new Date(1705751213000L));
+        SecurityEvent e1 = new SecurityEvent(EEventType.UNLOCK, new Date(1705751213000L));
 
         s1.getAccessCards().add(c1);
         e1.setSystem(s1);
@@ -54,8 +55,8 @@ public class DBInflator implements ApplicationListener<ContextRefreshedEvent> {
         );
 
         AccessCard c2 = new AccessCard("TESTCARD2");
-        SecurityEvent e2 = new SecurityEvent(new Date(1705752213000L));
-        SecurityEvent e3 = new SecurityEvent(new Date(1705752813000L));
+        SecurityEvent e2 = new SecurityEvent(EEventType.UNLOCK, new Date(1705752213000L));
+        SecurityEvent e3 = new SecurityEvent(EEventType.LOCK, new Date(1705752813000L));
 
         s2.getAccessCards().add(c2);
         e2.setSystem(s2);
