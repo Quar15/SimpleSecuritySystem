@@ -1,0 +1,29 @@
+main {
+    height: 80vh;
+}
+
+main, main form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+main form input {
+    padding: 8px 10px;
+    margin: 10px;
+    border: 1px solid var(--main);
+    border-radius: 5px;
+    width: 350px;
+    font-family: 'Roboto', sans-serif;
+}
+
+main form input[type='submit'] {
+    background-color: var(--main);
+    color: var(--text);
+}
+
+main form input[type='submit']:hover {
+    background-color: var(--main-hover);
+    cursor: pointer;
+}

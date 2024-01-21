@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nav Bar</title>
+</head>
+<body>
+    <div th:fragment="flash-list" class="flash-messages">
+        <div th:if="${flashMsg}" th:classappend="${flashClass}" th:switch="${flashClass}" class="flash">
+            <i th:case="'alert'" class="fa-solid fa-triangle-exclamation"></i>
+            <i th:case="'info'" class="fa-solid fa-circle-info"></i>
+            <i th:case="'error'" class="fa-solid fa-bug"></i>
+            <p th:text="${flashMsg}">Cannot do something because it is really long explanation why something failed</p>
+        </div>
+    </div>
+
+    <nav th:fragment="navbar">
+        <div class="logo">
+            <img th:src="@{/img/logo.png}" alt="Logo"/>
+            <!--Security by Ruslan Dezign from <a href="https://thenounproject.com/browse/icons/term/security/" target="_blank" title="Security Icons">Noun Project</a> (CC BY 3.0)-->
+        </div>
+        <hr/>
+        <ul>
+            <li><a href="/"><i class="fa-solid fa-house"></i>Home</a></li>
+            <li><a th:href="@{/system/list}"><i class="fa-solid fa-gears"></i>Systems</a><a th:href="@{/system/new}" class="plus">+</a></li>
+            <li><a th:href="@{/card/list}"><i class="fa-solid fa-address-card"></i>Cards</a><a th:href="@{/card/new}" class="plus">+</a></li>
+            <li><a th:href="@{/event/list}"><i class="fa-solid fa-envelope"></i>Events</a></li>
+            <li><a href="#api"><i class="fa-solid fa-book"></i>API</a></li>
+        </ul>
+    </nav>
+</body>
+</html>

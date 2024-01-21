@@ -1,9 +1,12 @@
 package xyz.kacperjanas.securityapi.controllers;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import xyz.kacperjanas.securityapi.commands.EventRequestCommand;
@@ -67,4 +70,13 @@ public class SecurityEventController {
     }
 
     //endregion
+
+    @GetMapping(value = {"/event/list"})
+    public String getSystemList(Model model) {
+        model.addAttribute(
+                "events",
+                securityEventRepository.findAllBy(Sort.by(Sort.Direction.DESC, "createdAt"))
+        );
+        return "event/list";
+    }
 }

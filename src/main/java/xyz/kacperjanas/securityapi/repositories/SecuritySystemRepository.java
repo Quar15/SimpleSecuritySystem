@@ -8,4 +8,7 @@ import java.util.UUID;
 
 public interface SecuritySystemRepository extends CrudRepository<SecuritySystem, UUID> {
     Iterable<SecuritySystem> findAllBy(Sort sortBy);
+
+    Iterable<SecuritySystem> findAllByFavourite(Boolean favourite);
+    Long countByFavourite(Boolean favourite);
 }

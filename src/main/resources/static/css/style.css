@@ -1,0 +1,243 @@
+:root {
+    --main: #0A2647;
+    --main-hover: #144272;
+    --extra: #2C74B3;
+    --text: #eee;
+    --disabled: #555;
+    --locked: #EE0;
+    --unlocked: #0F5;
+    --alert: #EE0;
+    --error: #E00;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: var(--text);
+}
+
+body {
+    display: flex;
+    font-family: 'Roboto', sans-serif;
+}
+
+/*#region FLASH */
+
+.flash-messages {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
+.flash-messages .flash {
+    border-radius: 5px;
+    border: 2px solid var(--main);
+    background-color: var(--main);
+    color: var(--text);
+    width: 300px;
+    padding: 15px;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+}
+
+.flash-messages .flash p {
+    margin-left: 15px;
+}
+
+.flash-messages .flash.info i {
+    color: var(--extra);
+}
+
+.flash-messages .flash.alert i {
+    color: var(--alert);
+}
+
+.flash-messages .flash.error i {
+    color: var(--error);
+}
+
+/*#endregion*
+
+/*#region NAVBAR */
+
+nav {
+    background-color: var(--main);
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+}
+
+nav .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 0;
+}
+
+nav .logo img {
+    width: 100px;
+}
+
+nav hr {
+    width: 80%;
+    margin: 15px auto;
+    color: var(--text);
+    background-color: var(--text);
+    border-radius: 15px;
+    height: 3px;
+}
+
+nav li {
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav li:hover {
+    background-color: var(--main-hover);
+    cursor: pointer;
+}
+
+nav li.active {
+    background-color: var(--main-hover);
+}
+
+
+nav li a {
+    width: 100%;
+    padding: 40px;
+}
+
+nav li a.plus {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 30px;
+    padding: 0;
+    width: 60px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: var(--extra);
+}
+
+nav li a.plus:hover {
+    background-color: var(--main);
+}
+
+nav li i {
+    padding-right: 12px;
+}
+
+/*#endregion*/
+
+/*#region MAIN */
+
+main {
+    width: 90%;
+    margin: 30px auto;
+    padding-left: 220px;
+}
+
+main .favourites {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0 50px 0;
+}
+
+main .favourites .system-block {
+    padding: 30px;
+    margin: 15px;
+    border: 2px solid var(--extra);
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 350px;
+    color: var(--main);
+}
+
+main .favourites .system-block:hover {
+    background-color: var(--extra);
+    color: var(--text);
+}
+
+main .favourites .system-block h2 {
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word;
+    margin: 10px 0;
+}
+
+main .favourites .system-block .activity {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+main .favourites .system-block .activity p {
+    margin-left: 10px;
+}
+
+.dot {
+    height: 13px;
+    width: 13px;
+    background-color: var(--disabled);
+    border-radius: 50%;
+}
+
+.dot.LOCKED {
+    background-color: var(--locked);
+}
+
+.dot.UNLOCKED {
+    background-color: var(--unlocked);
+}
+
+main table {
+    margin: 0 auto;
+    max-height: 100%;
+}
+
+main table td {
+    padding: 10px 5px;
+    text-align: center;
+}
+
+main table tr:nth-child(even) {
+    background-color: var(--extra);
+    color: var(--text);
+}
+
+main table td:nth-child(1) {
+    width: 100px;
+}
+
+main table td:nth-child(2) {
+    min-width: 200px;
+    max-width: 700px;
+}
+
+main table td:nth-child(3) {
+    width: 200px;
+}
+
+/*#endregion MAIN*/
+
+main table td a {
+    margin: 0 7px;
+    color: var(--undefined);
+}
+
+main table td a {
+    margin: 0 7px;
+}

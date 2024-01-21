@@ -12,33 +12,24 @@
 </head>
 <body>
 
-
     <div th:replace="~{fragments/navbar :: flash-list}"></div>
     <nav th:replace="~{fragments/navbar :: navbar}"></nav>
     <main>
         <table>
             <tbody>
                 <tr>
-                    <th>System Name</th>
+                    <th>Card Value</th>
                     <th>Created At</th>
                     <th>Updated At</th>
-                    <th>MAC</th>
-                    <th>STATUS</th>
                     <th></th>
                 </tr>
-                <tr th:each="system : ${systems}">
-                    <td><a th:href="@{/system/{id}/show(id=${system.id})}" th:text="${system.prettyName}" href="#"></a></td>
-                    <td th:text="${system.createdAt}"></td>
-                    <td th:text="${system.updatedAt}"></td>
-                    <td th:text="${system.macAddress}"></td>
-                    <td th:text="${system.status}"></td>
+                <tr th:each="card : ${cards}">
+                    <td th:text="${card.cardValue}"></td>
+                    <td th:text="${card.createdAt}"></td>
+                    <td th:text="${card.updatedAt}"></td>
                     <td>
-                        <a th:if="${system.favourite}" th:href="@{/system/{id}/favourite(id=${system.id})}" href="#favourite"><i class="fa-solid fa-heart"></i></a>
-                        <a th:unless="${system.favourite}" th:href="@{/system/{id}/favourite(id=${system.id})}" href="#favourite"><i class="fa-regular fa-heart"></i></a>
-
-                        <a th:href="@{/system/{id}/edit(id=${system.id})}" href="#edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a th:href="@{/system/{id}/card(id=${system.id})}"><i class="fa-solid fa-address-card"></i></a>
-                        <a th:href="@{/system/{id}/delete(id=${system.id})}" href="#delete"><i class="fa-solid fa-trash"></i></a>
+                        <a th:href="@{/card/{id}/edit(id=${card.id})}" href="#edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a th:href="@{/card/{id}/delete(id=${card.id})}" href="#delete"><i class="fa-solid fa-trash"></i></a>
                     </td>
                 </tr>
             </tbody>

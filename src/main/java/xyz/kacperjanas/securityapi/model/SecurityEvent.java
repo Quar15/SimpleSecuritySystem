@@ -1,6 +1,7 @@
 package xyz.kacperjanas.securityapi.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.*;

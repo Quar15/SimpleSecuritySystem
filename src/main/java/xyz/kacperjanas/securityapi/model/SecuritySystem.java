@@ -32,7 +32,7 @@ public class SecuritySystem {
     @ManyToMany(mappedBy = "systems", cascade = CascadeType.REMOVE)
     private Set<AccessCard> accessCards = new HashSet<>();
 
-    @OneToMany(mappedBy = "system")
+    @OneToMany(mappedBy = "system", cascade = CascadeType.REMOVE)
     @OrderBy("createdAt DESC")
     private Set<SecurityEvent> events = new HashSet<>();
 

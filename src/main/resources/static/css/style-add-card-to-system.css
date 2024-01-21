@@ -1,0 +1,26 @@
+button[type='submit'] {
+    border: none;
+    background: none;
+    background-color: none;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+main table tr:nth-child(even) button {
+    background-color: var(--extra);
+    color: var(--text);
+}
+
+main table tr button:hover {
+    background-color: var(--main);
+    color: var(--text);
+    cursor: pointer;
+}
+
+main table td:nth-child(2) {
+    min-width: 15px;
+}
+
+main table td:nth-child(6) {
+    min-width: 50px;
+}

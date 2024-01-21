@@ -1,5 +1,6 @@
 package xyz.kacperjanas.securityapi.controllers;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -7,9 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import xyz.kacperjanas.securityapi.commands.AuthorizationRequestCommand;
+import xyz.kacperjanas.securityapi.commands.SecuritySystemCommand;
 import xyz.kacperjanas.securityapi.common.EEventType;
 import xyz.kacperjanas.securityapi.common.ESystemStatus;
+import xyz.kacperjanas.securityapi.converters.SecuritySystemCommandToSecuritySystem;
 import xyz.kacperjanas.securityapi.converters.SecuritySystemToSecuritySystemCommand;
 import xyz.kacperjanas.securityapi.model.SecurityEvent;
 import xyz.kacperjanas.securityapi.model.SecuritySystem;
@@ -23,14 +27,23 @@ import java.util.UUID;
 @Controller
 public class SecuritySystemController {
 
+    private final int MAX_FAVOURITE_SYSTEMS = 5;
+
     private SecurityEventRepository securityEventRepository;
     private SecuritySystemRepository securitySystemRepository;
     private SecuritySystemToSecuritySystemCommand securitySystemToSecuritySystemCommand;
+    private SecuritySystemCommandToSecuritySystem securitySystemCommandToSecuritySystem;
 
-    public SecuritySystemController(SecurityEventRepository securityEventRepository, SecuritySystemRepository securitySystemRepository, SecuritySystemToSecuritySystemCommand securitySystemToSecuritySystemCommand) {
+    public SecuritySystemController(
+            SecurityEventRepository securityEventRepository,
+            SecuritySystemRepository securitySystemRepository,
+            SecuritySystemToSecuritySystemCommand securitySystemToSecuritySystemCommand,
+            SecuritySystemCommandToSecuritySystem securitySystemCommandToSecuritySystem
+    ) {
         this.securityEventRepository = securityEventRepository;
         this.securitySystemRepository = securitySystemRepository;
         this.securitySystemToSecuritySystemCommand = securitySystemToSecuritySystemCommand;
+        this.securitySystemCommandToSecuritySystem = securitySystemCommandToSecuritySystem;
     }
 
 //region API
@@ -109,5 +122,92 @@ public class SecuritySystemController {
                 securitySystemRepository.findAllBy(Sort.by(Sort.Direction.DESC, "updatedAt"))
         );
         return "system/list";
+    }
+
+    @RequestMapping(value = {"/system/{id}/delete"})
+    public String deleteSystem(Model model, @PathVariable("id") UUID id, RedirectAttributes redirectAttributes) {
+        try {
+            securitySystemRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("flashMsg", "Deleted System");
+            redirectAttributes.addFlashAttribute("flashClass", "info");
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("flashMsg", "Cannot delete System with connected Access Cards or Events");
+            redirectAttributes.addFlashAttribute("flashClass", "error");
+        }
+
+
+        return "redirect:/system/list";
+    }
+
+    @GetMapping(value = {"/system/new"})
+    public String newSystem(Model model) {
+        model.addAttribute("system", new SecuritySystemCommand());
+        return "system/addedit";
+    }
+
+    @GetMapping(value = {"/system/{id}/edit"})
+    public String editArtist(Model model, @PathVariable("id") UUID id) {
+        model.addAttribute("system", securitySystemToSecuritySystemCommand.convert(
+                securitySystemRepository.findById(id).get()
+        ));
+        return "system/addedit";
+    }
+
+    @PostMapping("/system")
+    public String saveOrUpdate(@ModelAttribute SecuritySystemCommand command) {
+
+        if (command.getId() == null) {
+            System.out.println("@INFO: Creating new security system");
+            SecuritySystem detachedSystem = securitySystemCommandToSecuritySystem.convert(command);
+            if (detachedSystem == null) {
+                return "redirect:/system/new";
+            }
+
+            detachedSystem.setStatus(ESystemStatus.UNLOCKED);
+            detachedSystem.setFavourite(false);
+
+            SecuritySystem savedSecuritySystem = securitySystemRepository.save(detachedSystem);
+            return "redirect:/system/" + savedSecuritySystem.getId() + "/show";
+        } else {
+            Optional<SecuritySystem> securitySystemOptional = securitySystemRepository.findById(command.getId());
+            SecuritySystem securitySystemFromDb = securitySystemOptional.get();
+            securitySystemFromDb.setPrettyName(command.getPrettyName());
+            securitySystemFromDb.setMacAddress(command.getMacAddress());
+            securitySystemRepository.save(securitySystemFromDb);
+
+            return "redirect:/system/" + securitySystemFromDb.getId() + "/show";
+        }
+    }
+
+    @GetMapping("/system/{id}/favourite")
+    public String favourite(Model model, @PathVariable("id") UUID id, RedirectAttributes redirectAttributes) {
+        Optional<SecuritySystem> securitySystemOptional = securitySystemRepository.findById(id);
+
+        if (securitySystemOptional.isEmpty()) {
+            return "error/404";
+        }
+
+        SecuritySystem securitySystemFromDb = securitySystemOptional.get();
+        Long favouritesCount = securitySystemRepository.countByFavourite(true);
+        if (favouritesCount > MAX_FAVOURITE_SYSTEMS) {
+            redirectAttributes.addFlashAttribute("flashMsg", "Max number of favourites reached!");
+            redirectAttributes.addFlashAttribute("flashClass", "warning");
+        } else {
+            securitySystemFromDb.setFavourite(!securitySystemFromDb.getFavourite());
+            securitySystemRepository.save(securitySystemFromDb);
+
+            Long newFavouritesCount = securitySystemRepository.countByFavourite(true);
+            redirectAttributes.addFlashAttribute(
+                    "flashMsg",
+                    "Added System " +
+                        securitySystemFromDb.getPrettyName() +
+                        " to favourites " +
+                        "[" + (newFavouritesCount) + "/" + MAX_FAVOURITE_SYSTEMS + "]"
+            );
+            redirectAttributes.addFlashAttribute("flashClass", "info");
+        }
+
+
+        return "redirect:/system/list";
     }
 }
