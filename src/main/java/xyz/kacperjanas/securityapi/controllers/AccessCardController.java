@@ -1,24 +1,18 @@
 package xyz.kacperjanas.securityapi.controllers;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import xyz.kacperjanas.securityapi.commands.AccessCardCommand;
-import xyz.kacperjanas.securityapi.commands.SecuritySystemCommand;
-import xyz.kacperjanas.securityapi.common.ESystemStatus;
 import xyz.kacperjanas.securityapi.converters.AccessCardCommandToAccessCard;
 import xyz.kacperjanas.securityapi.converters.AccessCardToAccessCardCommand;
 import xyz.kacperjanas.securityapi.model.AccessCard;
-import xyz.kacperjanas.securityapi.model.SecuritySystem;
 import xyz.kacperjanas.securityapi.repositories.AccessCardRepository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Controller
 public class AccessCardController {
@@ -46,6 +40,20 @@ public class AccessCardController {
                 accessCardRepository.findAllBy(Sort.by(Sort.Direction.DESC, "updatedAt"))
         );
         return "card/list";
+    }
+
+    @RequestMapping(value = {"/card/{id}/delete"})
+    public String deleteCard(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            accessCardRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("flashMsg", "Deleted Card");
+            redirectAttributes.addFlashAttribute("flashClass", "info");
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("flashMsg", "Cannot delete Card with connected System");
+            redirectAttributes.addFlashAttribute("flashClass", "error");
+        }
+
+        return "redirect:/card/list";
     }
 
     @GetMapping(value = {"/card/new"})
