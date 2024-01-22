@@ -19,7 +19,7 @@
 <main>
     <form th:object="${card}" th:action="@{/card}" method="POST">
         <input type="hidden" th:field="*{id}"/>
-        <h2 th:text="*{id} !=null ? 'Edit' : 'Create'">System</h2>
+        <h2 th:text="*{id} !=null ? 'Edit' : 'Create'">Card</h2>
         <input th:field="*{cardValue}" type="text" placeholder="System Name" name="name" id="name" minlength="2" maxlength="64" autofocus/>
         <input type="submit" value="Save">
     </form>
