@@ -245,7 +245,7 @@ public class SecuritySystemController {
         model.addAttribute("cards", notConnectedAccessCards);
         model.addAttribute("connectedCards", securitySystemAccessCards);
 
-        return "/system/addcardtosystem";
+        return "system/addcardtosystem";
     }
 
     @PostMapping("/system/{system_id}/add-card/{card_id}")
