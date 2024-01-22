@@ -31,7 +31,7 @@
                     <td th:text="${system.macAddress}"></td>
                     <td th:text="${system.status}"></td>
                     <td>
-                        <a th:if="${system.favourite}" th:href="@{/system/{id}/favourite(id=${system.id})}"><i class="fa-solid fa-heart"></i></a>
+                        <a th:if="${system.favourite}" th:href="@{/system/{id}/favourite(id=${system.id})}"><i class="fa-solid fa-heart-circle-xmark"></i></a>
                         <a th:unless="${system.favourite}" th:href="@{/system/{id}/favourite(id=${system.id})}"><i class="fa-regular fa-heart"></i></a>
 
                         <a th:href="@{/system/{id}/edit(id=${system.id})}"><i class="fa-solid fa-pen-to-square"></i></a>
