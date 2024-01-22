@@ -34,7 +34,7 @@ public class DBInflator implements ApplicationListener<ContextRefreshedEvent> {
     private void initData() {
         SecuritySystem s1 = new SecuritySystem(
                 "Test System 1",
-                "ABC",
+                "xx:xx:xx:xx:xx:01",
                 ESystemStatus.UNLOCKED,
                 false
         );
@@ -49,7 +49,7 @@ public class DBInflator implements ApplicationListener<ContextRefreshedEvent> {
 
         SecuritySystem s2 = new SecuritySystem(
                 "Test System 2",
-                "ABC",
+                "xx:xx:xx:xx:xx:02",
                 ESystemStatus.LOCKED,
                 true
         );
