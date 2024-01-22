@@ -11,8 +11,6 @@
     <title>System Overview</title>
 </head>
 <body>
-
-
     <div th:replace="~{fragments/navbar :: flash-list}"></div>
     <nav th:replace="~{fragments/navbar :: navbar}"></nav>
     <main>
@@ -33,12 +31,12 @@
                     <td th:text="${system.macAddress}"></td>
                     <td th:text="${system.status}"></td>
                     <td>
-                        <a th:if="${system.favourite}" th:href="@{/system/{id}/favourite(id=${system.id})}" href="#favourite"><i class="fa-solid fa-heart"></i></a>
-                        <a th:unless="${system.favourite}" th:href="@{/system/{id}/favourite(id=${system.id})}" href="#favourite"><i class="fa-regular fa-heart"></i></a>
+                        <a th:if="${system.favourite}" th:href="@{/system/{id}/favourite(id=${system.id})}"><i class="fa-solid fa-heart"></i></a>
+                        <a th:unless="${system.favourite}" th:href="@{/system/{id}/favourite(id=${system.id})}"><i class="fa-regular fa-heart"></i></a>
 
-                        <a th:href="@{/system/{id}/edit(id=${system.id})}" href="#edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a th:href="@{/system/{id}/card(id=${system.id})}"><i class="fa-solid fa-address-card"></i></a>
-                        <a th:href="@{/system/{id}/delete(id=${system.id})}" href="#delete"><i class="fa-solid fa-trash"></i></a>
+                        <a th:href="@{/system/{id}/edit(id=${system.id})}"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a th:href="@{/system/{id}/add-card(id=${system.id})}"><i class="fa-solid fa-address-card"></i></a>
+                        <a th:href="@{/system/{id}/delete(id=${system.id})}"><i class="fa-solid fa-trash"></i></a>
                     </td>
                 </tr>
             </tbody>

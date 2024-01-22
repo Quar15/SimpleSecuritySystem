@@ -13,16 +13,17 @@ import xyz.kacperjanas.securityapi.commands.AuthorizationRequestCommand;
 import xyz.kacperjanas.securityapi.commands.SecuritySystemCommand;
 import xyz.kacperjanas.securityapi.common.EEventType;
 import xyz.kacperjanas.securityapi.common.ESystemStatus;
+import xyz.kacperjanas.securityapi.converters.AccessCardToAccessCardCommand;
 import xyz.kacperjanas.securityapi.converters.SecuritySystemCommandToSecuritySystem;
 import xyz.kacperjanas.securityapi.converters.SecuritySystemToSecuritySystemCommand;
+import xyz.kacperjanas.securityapi.model.AccessCard;
 import xyz.kacperjanas.securityapi.model.SecurityEvent;
 import xyz.kacperjanas.securityapi.model.SecuritySystem;
+import xyz.kacperjanas.securityapi.repositories.AccessCardRepository;
 import xyz.kacperjanas.securityapi.repositories.SecurityEventRepository;
 import xyz.kacperjanas.securityapi.repositories.SecuritySystemRepository;
 
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 public class SecuritySystemController {
@@ -31,17 +32,21 @@ public class SecuritySystemController {
 
     private SecurityEventRepository securityEventRepository;
     private SecuritySystemRepository securitySystemRepository;
+    private AccessCardRepository accessCardRepository;
     private SecuritySystemToSecuritySystemCommand securitySystemToSecuritySystemCommand;
     private SecuritySystemCommandToSecuritySystem securitySystemCommandToSecuritySystem;
+    private AccessCardToAccessCardCommand accessCardToAccessCardCommand;
 
     public SecuritySystemController(
             SecurityEventRepository securityEventRepository,
             SecuritySystemRepository securitySystemRepository,
+            AccessCardRepository accessCardRepository,
             SecuritySystemToSecuritySystemCommand securitySystemToSecuritySystemCommand,
             SecuritySystemCommandToSecuritySystem securitySystemCommandToSecuritySystem
     ) {
         this.securityEventRepository = securityEventRepository;
         this.securitySystemRepository = securitySystemRepository;
+        this.accessCardRepository = accessCardRepository;
         this.securitySystemToSecuritySystemCommand = securitySystemToSecuritySystemCommand;
         this.securitySystemCommandToSecuritySystem = securitySystemCommandToSecuritySystem;
     }
@@ -146,7 +151,7 @@ public class SecuritySystemController {
     }
 
     @GetMapping(value = {"/system/{id}/edit"})
-    public String editArtist(Model model, @PathVariable("id") UUID id) {
+    public String editSystem(Model model, @PathVariable("id") UUID id) {
         model.addAttribute("system", securitySystemToSecuritySystemCommand.convert(
                 securitySystemRepository.findById(id).get()
         ));
@@ -209,5 +214,107 @@ public class SecuritySystemController {
 
 
         return "redirect:/system/list";
+    }
+
+    @GetMapping("/system/{id}/add-card")
+    public String addCard(Model model, @PathVariable("id") UUID id, RedirectAttributes redirectAttributes) {
+        Optional<SecuritySystem> securitySystemOptional = securitySystemRepository.findById(id);
+
+        if (securitySystemOptional.isEmpty()) {
+            redirectAttributes.addFlashAttribute("flashMsg", "Could not find System");
+            redirectAttributes.addFlashAttribute("flashClass", "error");
+            return "redirect:/system/list";
+        }
+
+        SecuritySystem securitySystemFromDb = securitySystemOptional.get();
+        model.addAttribute("system", securitySystemToSecuritySystemCommand.convert(
+                securitySystemFromDb
+        ));
+
+        Iterable<AccessCard> allAccessCards = accessCardRepository.findAll();
+        Set<AccessCard> securitySystemAccessCards = securitySystemFromDb.getAccessCards();
+
+        Iterator<AccessCard> iterator = allAccessCards.iterator();
+        Set<AccessCard> notConnectedAccessCards = new HashSet<>();
+        while(iterator.hasNext()) {
+            AccessCard currAccessCard = iterator.next();
+            if (!securitySystemAccessCards.contains(currAccessCard))
+                notConnectedAccessCards.add(currAccessCard);
+        }
+
+        model.addAttribute("cards", notConnectedAccessCards);
+        model.addAttribute("connectedCards", securitySystemAccessCards);
+
+        return "/system/addcardtosystem";
+    }
+
+    @PostMapping("/system/{system_id}/add-card/{card_id}")
+    public String addCardToSystem(
+            Model model,
+            @PathVariable("system_id") UUID systemId,
+            @PathVariable("card_id") Long cardId,
+            RedirectAttributes redirectAttributes
+    ) {
+        Optional<SecuritySystem> securitySystemOptional = securitySystemRepository.findById(systemId);
+
+        if (securitySystemOptional.isEmpty()) {
+            redirectAttributes.addFlashAttribute("flashMsg", "Could not find System");
+            redirectAttributes.addFlashAttribute("flashClass", "error");
+            return "redirect:/system/list";
+        }
+
+        Optional<AccessCard> accessCardOptional = accessCardRepository.findById(cardId);
+
+        if (accessCardOptional.isEmpty()) {
+            redirectAttributes.addFlashAttribute("flashMsg", "Could not find Card");
+            redirectAttributes.addFlashAttribute("flashClass", "error");
+            return "redirect:/system/list";
+        }
+
+        SecuritySystem securitySystemFromDb = securitySystemOptional.get();
+        AccessCard accessCardFromDb = accessCardOptional.get();
+
+        accessCardFromDb.getSystems().add(securitySystemFromDb);
+        accessCardRepository.save(accessCardFromDb);
+
+        redirectAttributes.addFlashAttribute("flashMsg", "Added Card to System");
+        redirectAttributes.addFlashAttribute("flashClass", "info");
+
+        return "redirect:/system/" + systemId + "/add-card";
+    }
+
+    @PostMapping("/system/{system_id}/remove-card/{card_id}")
+    public String removeCardFromSystem(
+            Model model,
+            @PathVariable("system_id") UUID systemId,
+            @PathVariable("card_id") Long cardId,
+            RedirectAttributes redirectAttributes
+    ) {
+        Optional<SecuritySystem> securitySystemOptional = securitySystemRepository.findById(systemId);
+
+        if (securitySystemOptional.isEmpty()) {
+            redirectAttributes.addFlashAttribute("flashMsg", "Could not find System");
+            redirectAttributes.addFlashAttribute("flashClass", "error");
+            return "redirect:/system/list";
+        }
+
+        Optional<AccessCard> accessCardOptional = accessCardRepository.findById(cardId);
+
+        if (accessCardOptional.isEmpty()) {
+            redirectAttributes.addFlashAttribute("flashMsg", "Could not find Card");
+            redirectAttributes.addFlashAttribute("flashClass", "error");
+            return "redirect:/system/list";
+        }
+
+        SecuritySystem securitySystemFromDb = securitySystemOptional.get();
+        AccessCard accessCardFromDb = accessCardOptional.get();
+
+        accessCardFromDb.getSystems().remove(securitySystemFromDb);
+        accessCardRepository.save(accessCardFromDb);
+
+        redirectAttributes.addFlashAttribute("flashMsg", "Removed Card from System");
+        redirectAttributes.addFlashAttribute("flashClass", "info");
+
+        return "redirect:/system/" + systemId + "/add-card";
     }
 }

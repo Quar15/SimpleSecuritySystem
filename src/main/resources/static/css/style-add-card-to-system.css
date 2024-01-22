@@ -1,7 +1,6 @@
 button[type='submit'] {
     border: none;
     background: none;
-    background-color: none;
     padding: 10px;
     border-radius: 5px;
 }
@@ -17,10 +16,12 @@ main table tr button:hover {
     cursor: pointer;
 }
 
-main table td:nth-child(2) {
-    min-width: 15px;
+main table td:nth-child(1) {
+    min-width: 75px;
+    width: 75px;
 }
 
-main table td:nth-child(6) {
+main table td:nth-child(3) {
     min-width: 50px;
+    width: 50px;
 }
