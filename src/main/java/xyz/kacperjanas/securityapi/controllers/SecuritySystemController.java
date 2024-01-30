@@ -76,6 +76,12 @@ public class SecuritySystemController {
 
         SecuritySystem securitySystem = securitySystemOptional.get();
         if (! securitySystem.hasCardWithValue(command.getCardValue())) {
+            SecurityEvent.CreateAndSave(
+                    EEventType.NO_AUTHORIZATION,
+                    new Date(),
+                    securitySystem,
+                    securityEventRepository
+            );
             System.out.println(
                     "@WARNING: UNAUTHORIZED REQUEST for system authorization (" +
                             command.getSystemId() + ", " +
@@ -97,9 +103,12 @@ public class SecuritySystemController {
         };
         securitySystemRepository.save(securitySystem);
 
-        SecurityEvent securityEvent = new SecurityEvent(eventType, new Date());
-        securityEvent.setSystem(securitySystem);
-        securityEventRepository.save(securityEvent);
+        SecurityEvent.CreateAndSave(
+                eventType,
+                new Date(),
+                securitySystem,
+                securityEventRepository
+        );
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }

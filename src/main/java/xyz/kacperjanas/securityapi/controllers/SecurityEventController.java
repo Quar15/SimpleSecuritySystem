@@ -37,7 +37,7 @@ public class SecurityEventController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<Void> checkAuthorizationForSystem(@RequestBody EventRequestCommand command) {
+    public ResponseEntity<Void> recordEventDetection(@RequestBody EventRequestCommand command) {
 
         if (command.getSystemId() == null || command.getTimestamp() == null) {
             System.out.println(

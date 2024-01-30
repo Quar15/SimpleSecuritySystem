@@ -15,6 +15,9 @@ function updateColumnEventType(columnN) {
             case "MOVE_DETECTION":
                 e.innerHTML = '<i class="fa-solid fa-person-walking"></i>';
                 break;
+            case "NO_AUTHORIZATION":
+                e.innerHTML = '<i class="fa-solid fa-question"></i>';
+                break;
             default:
                 e.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>'
                 break;

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.*;
 import xyz.kacperjanas.securityapi.common.EEventType;
+import xyz.kacperjanas.securityapi.repositories.SecurityEventRepository;
 
 import java.util.Date;
 
@@ -32,4 +33,10 @@ public class SecurityEvent {
     }
 
     public SecurityEvent() {}
+
+    public static void CreateAndSave(EEventType eventType, Date createdAt, SecuritySystem securitySystem, SecurityEventRepository repository) {
+        SecurityEvent securityEvent = new SecurityEvent(eventType, createdAt);
+        securityEvent.setSystem(securitySystem);
+        repository.save(securityEvent);
+    }
 }
