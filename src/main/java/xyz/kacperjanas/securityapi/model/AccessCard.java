@@ -25,7 +25,7 @@ public class AccessCard {
     @UpdateTimestamp
     private Date updatedAt;
 
-     @ManyToMany(cascade = CascadeType.REMOVE)
+     @ManyToMany()
      private Set<SecuritySystem> systems = new HashSet<>();
 
     public AccessCard(String cardValue) {

@@ -145,7 +145,7 @@ public class SecuritySystemController {
             redirectAttributes.addFlashAttribute("flashMsg", "Deleted System");
             redirectAttributes.addFlashAttribute("flashClass", "info");
         } catch (DataIntegrityViolationException e) {
-            redirectAttributes.addFlashAttribute("flashMsg", "Cannot delete System with connected Access Cards or Events");
+            redirectAttributes.addFlashAttribute("flashMsg", "Cannot delete System with connected Access Cards");
             redirectAttributes.addFlashAttribute("flashClass", "error");
         }
 

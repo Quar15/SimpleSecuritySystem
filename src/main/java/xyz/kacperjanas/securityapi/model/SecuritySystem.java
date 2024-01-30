@@ -29,7 +29,7 @@ public class SecuritySystem {
     private Date updatedAt;
     private Boolean favourite;
 
-    @ManyToMany(mappedBy = "systems", cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "systems")
     private Set<AccessCard> accessCards = new HashSet<>();
 
     @OneToMany(mappedBy = "system", cascade = CascadeType.REMOVE)
