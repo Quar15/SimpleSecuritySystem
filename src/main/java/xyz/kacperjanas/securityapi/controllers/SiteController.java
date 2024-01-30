@@ -33,4 +33,9 @@ public class SiteController {
 
         return "index";
     }
+
+    @GetMapping(value = {"/api"})
+    public String apiRoutes(Model model) {
+        return "api";
+    }
 }

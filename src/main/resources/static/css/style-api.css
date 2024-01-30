@@ -1,0 +1,25 @@
+.request.post table th {
+    background-color: var(--main-hover);
+    color: var(--text);
+    padding: 5px;
+}
+
+.request table, .request th, .request tr {
+    border: 1px solid var(--main);
+    border-collapse: collapse;
+}
+
+.request .code {
+    padding: 30px;
+    background-color: var(--main);
+    color: var(--text);
+    margin-bottom: 10px;
+}
+
+.request h3 {
+    margin: 10px 0;
+}
+
+.request ul {
+    margin-left: 30px;
+}
