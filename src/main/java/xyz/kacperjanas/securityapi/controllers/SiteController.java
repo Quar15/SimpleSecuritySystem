@@ -28,7 +28,7 @@ public class SiteController {
 
         model.addAttribute(
                 "events",
-                securityEventRepository.findAllBy(Sort.by(Sort.Direction.DESC, "createdAt"))
+                securityEventRepository.findFirst10By(Sort.by(Sort.Direction.DESC, "createdAt"))
         );
 
         return "index";

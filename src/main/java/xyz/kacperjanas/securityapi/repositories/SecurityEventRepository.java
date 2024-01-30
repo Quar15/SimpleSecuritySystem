@@ -6,4 +6,6 @@ import xyz.kacperjanas.securityapi.model.SecurityEvent;
 
 public interface SecurityEventRepository extends CrudRepository<SecurityEvent, Long> {
     Iterable<SecurityEvent> findAllBy(Sort sortBy);
+
+    Iterable<SecurityEvent> findFirst10By(Sort sortBy);
 }
